@@ -60,6 +60,13 @@ fn main() {
 
     //save the buffer
     editor.save();
+    
+    execute!(stdout(), terminal::Clear(terminal::ClearType::All)).unwrap();
+    
+    execute!(stdout(), cursor::MoveTo(0, 0)).unwrap();
+
+    //disable raw mode
+    crossterm::terminal::disable_raw_mode().expect("can run in raw mode");
 
 }
 
@@ -143,7 +150,7 @@ impl EditorTrait for Editor {
     //function to move the cursor up
     fn move_up(&mut self){
         //check if the cursor is in the bounds of the buffer
-        let in_virtical_bound = self.line+1 >= 0 && self.line+1 < self.max_line;
+        let in_virtical_bound = self.line+1 >= 0 && self.line+1 <= self.max_line;
         let mut in_horizontal_bound = false;
         if in_virtical_bound{
             in_horizontal_bound = self.column >= 0 && self.column < self.max_column[(self.line-1) as usize];
@@ -161,7 +168,7 @@ impl EditorTrait for Editor {
     //function to move the cursor down
     fn move_down(&mut self){
         //check if the cursor is in the bounds of the buffer
-        let in_virtical_bound = self.line+1 >= 0 && self.line+1 < self.max_line-1;
+        let in_virtical_bound = self.line+1 >= 0 && self.line+1 <= self.max_line-1;
         let mut in_horizontal_bound = false;
         if in_virtical_bound{
             in_horizontal_bound = self.column >= 0 && self.column < self.max_column[(self.line+1) as usize];
